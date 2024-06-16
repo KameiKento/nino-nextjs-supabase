@@ -31,17 +31,26 @@ export default function ItemForm() {
   const { toast } = useToast();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    await createItem(data);
+    createItem(data)
+      .then(() => {
+        toast({
+          title: "投稿しました",
+          description: "アイテム一覧をご確認ください",
+        });
 
-    toast({
-      title: "投稿しました",
-      description: "アイテム一覧をご確認ください",
-    });
-
-    form.reset();
+        form.reset();
+      })
+      .catch(() => {
+        toast({
+          variant: "destructive",
+          title: "サーバー側でエラーが発生しました",
+          description: "管理者にお問い合わせください",
+        });
+      });
   };
 
   const form = useForm<FormData>({
+    // どういうformかを定義
     resolver: zodResolver(formSchema),
     defaultValues: {
       amount: 0,
@@ -52,7 +61,7 @@ export default function ItemForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit, () => {
-          alert("error");
+          alert("form側のエラーです！");
         })}
         className="space-y-8"
       >
@@ -78,14 +87,16 @@ export default function ItemForm() {
             <FormItem>
               <FormLabel>値段</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} type="number" />
               </FormControl>
               <FormDescription>0以上の数値を入力</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">商品を追加</Button>
+        <Button disabled={form.formState.isSubmitting} type="submit">
+          商品を追加
+        </Button>
       </form>
     </Form>
   );

@@ -11,10 +11,10 @@ export default async function Header() {
         <Link href="/">Logo</Link>
       </Button>
       <Button asChild variant="ghost">
-        <Link href="/about">about</Link>
+        <Link href="/items">商品一覧</Link>
       </Button>
       <Button asChild variant="ghost">
-        <Link href="/mypage">Mypage</Link>
+        <Link href="/mypage">マイページ</Link>
       </Button>
 
       <span className="flex-1"></span>
